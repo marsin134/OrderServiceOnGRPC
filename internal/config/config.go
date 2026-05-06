@@ -3,6 +3,7 @@ package config
 import (
 	"bufio"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
 	"strings"
@@ -110,3 +111,13 @@ func LoadEnvFile(filename string) error {
 
 	return scanner.Err()
 }
+
+func setupLogger() *logrus.Logger {
+	logger := logrus.New()
+	logger.SetFormatter(&logrus.TextFormatter{
+		ForceColors: true,
+	})
+	return logger
+}
+
+var Log = setupLogger()
