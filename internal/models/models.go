@@ -3,13 +3,13 @@ package models
 import "time"
 
 type Order struct {
-	OrderId       string    `json:"orderId"`
-	ProductId     string    `json:"productId"`
-	SellerId      string    `json:"sellerId"`
-	BuyerId       string    `json:"buyerId"`
-	Status        string    `json:"status"`
-	PickupPointId string    `json:"pickupPointId"`
-	DeliveryTime  string    `json:"deliveryTime"`
-	CreateTime    time.Time `json:"createTime"`
-	UpdateTime    time.Time `json:"updateTime"`
+	OrderId       string    `json:"orderId" db:"order_id"`
+	ProductId     string    `json:"productId" db:"product_id"`
+	SellerId      string    `json:"sellerId" db:"seller_id"`
+	BuyerId       string    `json:"buyerId" db:"buyer_id"`
+	Status        string    `json:"status" db:"status"`
+	PickupPointId string    `json:"pickupPointId" db:"pickup_point_id"`
+	DeliveryTime  string    `json:"deliveryTime" db:"delivery_time"`
+	CreateTime    time.Time `json:"createTime" db:"created_at"`
+	UpdateTime    time.Time `json:"updateTime" db:"updated_at"`
 }

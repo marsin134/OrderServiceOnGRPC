@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "orderServiceGRPC/pkg/generated/order";
+
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (OrderResponse);
+  rpc GetOrderId(GetOrderRequest) returns (OrderResponse);
+  rpc GetOrderSeller(OrderListRequest) returns (OrderListResponse);
+  rpc GetOrderBuyer(OrderListRequest) returns (OrderListResponse);
+  rpc GetOrderPickupPoint(OrderListRequest) returns (OrderListResponse);
+  rpc UpdateOrderStatus(UpdateOrderStatusRequest) returns (OrderResponse);
+}
+
+message Order {
+  string order_id = 1;
+  string product_id = 2;
+  string seller_id = 3;
+  string buyer_id = 4;
+  string status = 5;
+  string pickup_point = 6;
+  string estimated_delivery_time = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_COLLECTING = 1;    // сборка
+  ORDER_STATUS_DELIVERING = 2;     // доставка
+  ORDER_STATUS_READY_FOR_PICKUP = 3; // готово к получению
+  ORDER_STATUS_DELIVERED = 4;      // доставлено
+  ORDER_STATUS_RETURNED = 5;       // возврат
+}
+
+message CreateOrderRequest {
+  string product_id = 1;
+  string seller_id = 2;
+  string buyer_id = 3;
+  string pickup_point = 4;
+  string estimated_delivery_time = 5;
+}
+
+message GetOrderRequest {
+  string id = 1;
+}
+
+message UpdateOrderStatusRequest {
+  string order_id = 1;
+  OrderStatus new_status = 2;
+}
+
+message OrderResponse {
+  Order order = 1;
+}
+
+message OrderListRequest {
+  string id = 1;
+  optional OrderStatus status = 2;
+}
+
+message OrderListResponse {
+  repeated Order orders = 1;
+}
+
+
+//protoc --proto_path=api/proto --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative api/proto/order.proto
+
