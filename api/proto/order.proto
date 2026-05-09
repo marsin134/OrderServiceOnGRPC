@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package order;
 
-option go_package = "orderServiceGRPC/pkg/generated/order";
+option go_package = "pkg/generated/order";
 
 service OrderService {
   rpc CreateOrder(CreateOrderRequest) returns (OrderResponse);
@@ -11,6 +11,7 @@ service OrderService {
   rpc GetOrderBuyer(OrderListRequest) returns (OrderListResponse);
   rpc GetOrderPickupPoint(OrderListRequest) returns (OrderListResponse);
   rpc UpdateOrderStatus(UpdateOrderStatusRequest) returns (OrderResponse);
+  rpc DeleteOrder(GetOrderRequest) returns (OrderDeleteResponse);
 }
 
 message Order {
@@ -64,6 +65,10 @@ message OrderListResponse {
   repeated Order orders = 1;
 }
 
+message OrderDeleteResponse {
+  string message = 1;
+}
 
-//protoc --proto_path=api/proto --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative api/proto/order.proto
+
+//protoc --proto_path=api/proto --go_out=pkg/generated/order --go_opt=paths=source_relative --go-grpc_out=pkg/generated/order --go-grpc_opt=paths=source_relative api/proto/order.proto
 

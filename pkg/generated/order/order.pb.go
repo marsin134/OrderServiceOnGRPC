@@ -4,7 +4,7 @@
 // 	protoc        v7.34.1
 // source: order.proto
 
-package generated
+package order
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -499,6 +499,50 @@ func (x *OrderListResponse) GetOrders() []*Order {
 	return nil
 }
 
+type OrderDeleteResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderDeleteResponse) Reset() {
+	*x = OrderDeleteResponse{}
+	mi := &file_order_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderDeleteResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderDeleteResponse) ProtoMessage() {}
+
+func (x *OrderDeleteResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_order_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderDeleteResponse.ProtoReflect.Descriptor instead.
+func (*OrderDeleteResponse) Descriptor() ([]byte, []int) {
+	return file_order_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *OrderDeleteResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_order_proto protoreflect.FileDescriptor
 
 const file_order_proto_rawDesc = "" +
@@ -537,14 +581,16 @@ const file_order_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\x0e2\x12.order.OrderStatusH\x00R\x06status\x88\x01\x01B\t\n" +
 	"\a_status\"9\n" +
 	"\x11OrderListResponse\x12$\n" +
-	"\x06orders\x18\x01 \x03(\v2\f.order.OrderR\x06orders*\xbf\x01\n" +
+	"\x06orders\x18\x01 \x03(\v2\f.order.OrderR\x06orders\"/\n" +
+	"\x13OrderDeleteResponse\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage*\xbf\x01\n" +
 	"\vOrderStatus\x12\x1c\n" +
 	"\x18ORDER_STATUS_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17ORDER_STATUS_COLLECTING\x10\x01\x12\x1b\n" +
 	"\x17ORDER_STATUS_DELIVERING\x10\x02\x12!\n" +
 	"\x1dORDER_STATUS_READY_FOR_PICKUP\x10\x03\x12\x1a\n" +
 	"\x16ORDER_STATUS_DELIVERED\x10\x04\x12\x19\n" +
-	"\x15ORDER_STATUS_RETURNED\x10\x052\xa9\x03\n" +
+	"\x15ORDER_STATUS_RETURNED\x10\x052\xec\x03\n" +
 	"\fOrderService\x12>\n" +
 	"\vCreateOrder\x12\x19.order.CreateOrderRequest\x1a\x14.order.OrderResponse\x12:\n" +
 	"\n" +
@@ -552,7 +598,8 @@ const file_order_proto_rawDesc = "" +
 	"\x0eGetOrderSeller\x12\x17.order.OrderListRequest\x1a\x18.order.OrderListResponse\x12B\n" +
 	"\rGetOrderBuyer\x12\x17.order.OrderListRequest\x1a\x18.order.OrderListResponse\x12H\n" +
 	"\x13GetOrderPickupPoint\x12\x17.order.OrderListRequest\x1a\x18.order.OrderListResponse\x12J\n" +
-	"\x11UpdateOrderStatus\x12\x1f.order.UpdateOrderStatusRequest\x1a\x14.order.OrderResponseB&Z$orderServiceGRPC/pkg/generated/orderb\x06proto3"
+	"\x11UpdateOrderStatus\x12\x1f.order.UpdateOrderStatusRequest\x1a\x14.order.OrderResponse\x12A\n" +
+	"\vDeleteOrder\x12\x16.order.GetOrderRequest\x1a\x1a.order.OrderDeleteResponseB\x15Z\x13pkg/generated/orderb\x06proto3"
 
 var (
 	file_order_proto_rawDescOnce sync.Once
@@ -567,7 +614,7 @@ func file_order_proto_rawDescGZIP() []byte {
 }
 
 var file_order_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_order_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_order_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_order_proto_goTypes = []any{
 	(OrderStatus)(0),                 // 0: order.OrderStatus
 	(*Order)(nil),                    // 1: order.Order
@@ -577,6 +624,7 @@ var file_order_proto_goTypes = []any{
 	(*OrderResponse)(nil),            // 5: order.OrderResponse
 	(*OrderListRequest)(nil),         // 6: order.OrderListRequest
 	(*OrderListResponse)(nil),        // 7: order.OrderListResponse
+	(*OrderDeleteResponse)(nil),      // 8: order.OrderDeleteResponse
 }
 var file_order_proto_depIdxs = []int32{
 	0,  // 0: order.UpdateOrderStatusRequest.new_status:type_name -> order.OrderStatus
@@ -589,14 +637,16 @@ var file_order_proto_depIdxs = []int32{
 	6,  // 7: order.OrderService.GetOrderBuyer:input_type -> order.OrderListRequest
 	6,  // 8: order.OrderService.GetOrderPickupPoint:input_type -> order.OrderListRequest
 	4,  // 9: order.OrderService.UpdateOrderStatus:input_type -> order.UpdateOrderStatusRequest
-	5,  // 10: order.OrderService.CreateOrder:output_type -> order.OrderResponse
-	5,  // 11: order.OrderService.GetOrderId:output_type -> order.OrderResponse
-	7,  // 12: order.OrderService.GetOrderSeller:output_type -> order.OrderListResponse
-	7,  // 13: order.OrderService.GetOrderBuyer:output_type -> order.OrderListResponse
-	7,  // 14: order.OrderService.GetOrderPickupPoint:output_type -> order.OrderListResponse
-	5,  // 15: order.OrderService.UpdateOrderStatus:output_type -> order.OrderResponse
-	10, // [10:16] is the sub-list for method output_type
-	4,  // [4:10] is the sub-list for method input_type
+	3,  // 10: order.OrderService.DeleteOrder:input_type -> order.GetOrderRequest
+	5,  // 11: order.OrderService.CreateOrder:output_type -> order.OrderResponse
+	5,  // 12: order.OrderService.GetOrderId:output_type -> order.OrderResponse
+	7,  // 13: order.OrderService.GetOrderSeller:output_type -> order.OrderListResponse
+	7,  // 14: order.OrderService.GetOrderBuyer:output_type -> order.OrderListResponse
+	7,  // 15: order.OrderService.GetOrderPickupPoint:output_type -> order.OrderListResponse
+	5,  // 16: order.OrderService.UpdateOrderStatus:output_type -> order.OrderResponse
+	8,  // 17: order.OrderService.DeleteOrder:output_type -> order.OrderDeleteResponse
+	11, // [11:18] is the sub-list for method output_type
+	4,  // [4:11] is the sub-list for method input_type
 	4,  // [4:4] is the sub-list for extension type_name
 	4,  // [4:4] is the sub-list for extension extendee
 	0,  // [0:4] is the sub-list for field type_name
@@ -614,7 +664,7 @@ func file_order_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_order_proto_rawDesc), len(file_order_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   7,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

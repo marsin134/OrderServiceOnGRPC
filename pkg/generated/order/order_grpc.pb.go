@@ -4,7 +4,7 @@
 // - protoc             v7.34.1
 // source: order.proto
 
-package generated
+package order
 
 import (
 	context "context"
@@ -25,6 +25,7 @@ const (
 	OrderService_GetOrderBuyer_FullMethodName       = "/order.OrderService/GetOrderBuyer"
 	OrderService_GetOrderPickupPoint_FullMethodName = "/order.OrderService/GetOrderPickupPoint"
 	OrderService_UpdateOrderStatus_FullMethodName   = "/order.OrderService/UpdateOrderStatus"
+	OrderService_DeleteOrder_FullMethodName         = "/order.OrderService/DeleteOrder"
 )
 
 // OrderServiceClient is the client API for OrderService service.
@@ -37,6 +38,7 @@ type OrderServiceClient interface {
 	GetOrderBuyer(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListResponse, error)
 	GetOrderPickupPoint(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListResponse, error)
 	UpdateOrderStatus(ctx context.Context, in *UpdateOrderStatusRequest, opts ...grpc.CallOption) (*OrderResponse, error)
+	DeleteOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*OrderDeleteResponse, error)
 }
 
 type orderServiceClient struct {
@@ -107,6 +109,16 @@ func (c *orderServiceClient) UpdateOrderStatus(ctx context.Context, in *UpdateOr
 	return out, nil
 }
 
+func (c *orderServiceClient) DeleteOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*OrderDeleteResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrderDeleteResponse)
+	err := c.cc.Invoke(ctx, OrderService_DeleteOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderServiceServer is the server API for OrderService service.
 // All implementations must embed UnimplementedOrderServiceServer
 // for forward compatibility.
@@ -117,6 +129,7 @@ type OrderServiceServer interface {
 	GetOrderBuyer(context.Context, *OrderListRequest) (*OrderListResponse, error)
 	GetOrderPickupPoint(context.Context, *OrderListRequest) (*OrderListResponse, error)
 	UpdateOrderStatus(context.Context, *UpdateOrderStatusRequest) (*OrderResponse, error)
+	DeleteOrder(context.Context, *GetOrderRequest) (*OrderDeleteResponse, error)
 	mustEmbedUnimplementedOrderServiceServer()
 }
 
@@ -144,6 +157,9 @@ func (UnimplementedOrderServiceServer) GetOrderPickupPoint(context.Context, *Ord
 }
 func (UnimplementedOrderServiceServer) UpdateOrderStatus(context.Context, *UpdateOrderStatusRequest) (*OrderResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateOrderStatus not implemented")
+}
+func (UnimplementedOrderServiceServer) DeleteOrder(context.Context, *GetOrderRequest) (*OrderDeleteResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteOrder not implemented")
 }
 func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
 func (UnimplementedOrderServiceServer) testEmbeddedByValue()                      {}
@@ -274,6 +290,24 @@ func _OrderService_UpdateOrderStatus_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_DeleteOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).DeleteOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_DeleteOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).DeleteOrder(ctx, req.(*GetOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -304,6 +338,10 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateOrderStatus",
 			Handler:    _OrderService_UpdateOrderStatus_Handler,
+		},
+		{
+			MethodName: "DeleteOrder",
+			Handler:    _OrderService_DeleteOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
