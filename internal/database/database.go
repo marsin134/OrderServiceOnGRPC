@@ -18,7 +18,7 @@ type MethodsDB interface {
 }
 
 type DB struct {
-	db *sqlx.DB
+	*sqlx.DB
 }
 
 func ConnectedDB(cfg *config.Config) (*DB, error) {
@@ -44,7 +44,7 @@ func ConnectedDB(cfg *config.Config) (*DB, error) {
 
 	config.Log.Info("Successfully connected to db")
 
-	return &DB{db: db}, nil
+	return &DB{db}, nil
 }
 
 func (db *DB) RunMigrations(migrationFilePath string) error {
@@ -60,7 +60,7 @@ func (db *DB) RunMigrations(migrationFilePath string) error {
 	config.Log.WithFields(logrus.Fields{
 		"path": migrationFilePath}).Info("Attempting to run migration")
 
-	_, err = db.db.Exec(string(migration))
+	_, err = db.Exec(string(migration))
 	if err != nil {
 		return fmt.Errorf("error executing migration %s: %w", migrationFilePath, err)
 	}
@@ -70,7 +70,7 @@ func (db *DB) RunMigrations(migrationFilePath string) error {
 }
 
 func (db *DB) Close() {
-	db.db.Close()
+	db.DB.Close()
 }
 
 func (db *DB) GetDB() *DB {

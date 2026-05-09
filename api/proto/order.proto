@@ -7,9 +7,7 @@ option go_package = "pkg/generated/order";
 service OrderService {
   rpc CreateOrder(CreateOrderRequest) returns (OrderResponse);
   rpc GetOrderId(GetOrderRequest) returns (OrderResponse);
-  rpc GetOrderSeller(OrderListRequest) returns (OrderListResponse);
-  rpc GetOrderBuyer(OrderListRequest) returns (OrderListResponse);
-  rpc GetOrderPickupPoint(OrderListRequest) returns (OrderListResponse);
+  rpc GetOrderList(OrderListRequest) returns (OrderListResponse);
   rpc UpdateOrderStatus(UpdateOrderStatusRequest) returns (OrderResponse);
   rpc DeleteOrder(GetOrderRequest) returns (OrderDeleteResponse);
 }
@@ -20,7 +18,7 @@ message Order {
   string seller_id = 3;
   string buyer_id = 4;
   string status = 5;
-  string pickup_point = 6;
+  string pickup_point_id = 6;
   string estimated_delivery_time = 7;
   string created_at = 8;
   string updated_at = 9;
@@ -45,6 +43,7 @@ message CreateOrderRequest {
 
 message GetOrderRequest {
   string id = 1;
+  optional OrderStatus status = 2;
 }
 
 message UpdateOrderStatusRequest {
@@ -57,8 +56,11 @@ message OrderResponse {
 }
 
 message OrderListRequest {
-  string id = 1;
-  optional OrderStatus status = 2;
+  optional string idProduct = 1;
+  optional string idSeller = 2;
+  optional string idBuyer = 3;
+  optional string idPickupPoint = 4;
+  optional OrderStatus status = 5;
 }
 
 message OrderListResponse {

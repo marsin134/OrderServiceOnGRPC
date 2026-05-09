@@ -86,7 +86,7 @@ type Order struct {
 	SellerId              string                 `protobuf:"bytes,3,opt,name=seller_id,json=sellerId,proto3" json:"seller_id,omitempty"`
 	BuyerId               string                 `protobuf:"bytes,4,opt,name=buyer_id,json=buyerId,proto3" json:"buyer_id,omitempty"`
 	Status                string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
-	PickupPoint           string                 `protobuf:"bytes,6,opt,name=pickup_point,json=pickupPoint,proto3" json:"pickup_point,omitempty"`
+	PickupPointId         string                 `protobuf:"bytes,6,opt,name=pickup_point_id,json=pickupPointId,proto3" json:"pickup_point_id,omitempty"`
 	EstimatedDeliveryTime string                 `protobuf:"bytes,7,opt,name=estimated_delivery_time,json=estimatedDeliveryTime,proto3" json:"estimated_delivery_time,omitempty"`
 	CreatedAt             string                 `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt             string                 `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
@@ -159,9 +159,9 @@ func (x *Order) GetStatus() string {
 	return ""
 }
 
-func (x *Order) GetPickupPoint() string {
+func (x *Order) GetPickupPointId() string {
 	if x != nil {
-		return x.PickupPoint
+		return x.PickupPointId
 	}
 	return ""
 }
@@ -266,6 +266,7 @@ func (x *CreateOrderRequest) GetEstimatedDeliveryTime() string {
 type GetOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Status        *OrderStatus           `protobuf:"varint,2,opt,name=status,proto3,enum=order.OrderStatus,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -305,6 +306,13 @@ func (x *GetOrderRequest) GetId() string {
 		return x.Id
 	}
 	return ""
+}
+
+func (x *GetOrderRequest) GetStatus() OrderStatus {
+	if x != nil && x.Status != nil {
+		return *x.Status
+	}
+	return OrderStatus_ORDER_STATUS_UNSPECIFIED
 }
 
 type UpdateOrderStatusRequest struct {
@@ -405,8 +413,11 @@ func (x *OrderResponse) GetOrder() *Order {
 
 type OrderListRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Status        *OrderStatus           `protobuf:"varint,2,opt,name=status,proto3,enum=order.OrderStatus,oneof" json:"status,omitempty"`
+	IdProduct     *string                `protobuf:"bytes,1,opt,name=idProduct,proto3,oneof" json:"idProduct,omitempty"`
+	IdSeller      *string                `protobuf:"bytes,2,opt,name=idSeller,proto3,oneof" json:"idSeller,omitempty"`
+	IdBuyer       *string                `protobuf:"bytes,3,opt,name=idBuyer,proto3,oneof" json:"idBuyer,omitempty"`
+	IdPickupPoint *string                `protobuf:"bytes,4,opt,name=idPickupPoint,proto3,oneof" json:"idPickupPoint,omitempty"`
+	Status        *OrderStatus           `protobuf:"varint,5,opt,name=status,proto3,enum=order.OrderStatus,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -441,9 +452,30 @@ func (*OrderListRequest) Descriptor() ([]byte, []int) {
 	return file_order_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *OrderListRequest) GetId() string {
-	if x != nil {
-		return x.Id
+func (x *OrderListRequest) GetIdProduct() string {
+	if x != nil && x.IdProduct != nil {
+		return *x.IdProduct
+	}
+	return ""
+}
+
+func (x *OrderListRequest) GetIdSeller() string {
+	if x != nil && x.IdSeller != nil {
+		return *x.IdSeller
+	}
+	return ""
+}
+
+func (x *OrderListRequest) GetIdBuyer() string {
+	if x != nil && x.IdBuyer != nil {
+		return *x.IdBuyer
+	}
+	return ""
+}
+
+func (x *OrderListRequest) GetIdPickupPoint() string {
+	if x != nil && x.IdPickupPoint != nil {
+		return *x.IdPickupPoint
 	}
 	return ""
 }
@@ -547,15 +579,15 @@ var File_order_proto protoreflect.FileDescriptor
 
 const file_order_proto_rawDesc = "" +
 	"\n" +
-	"\vorder.proto\x12\x05order\"\xaa\x02\n" +
+	"\vorder.proto\x12\x05order\"\xaf\x02\n" +
 	"\x05Order\x12\x19\n" +
 	"\border_id\x18\x01 \x01(\tR\aorderId\x12\x1d\n" +
 	"\n" +
 	"product_id\x18\x02 \x01(\tR\tproductId\x12\x1b\n" +
 	"\tseller_id\x18\x03 \x01(\tR\bsellerId\x12\x19\n" +
 	"\bbuyer_id\x18\x04 \x01(\tR\abuyerId\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\tR\x06status\x12!\n" +
-	"\fpickup_point\x18\x06 \x01(\tR\vpickupPoint\x126\n" +
+	"\x06status\x18\x05 \x01(\tR\x06status\x12&\n" +
+	"\x0fpickup_point_id\x18\x06 \x01(\tR\rpickupPointId\x126\n" +
 	"\x17estimated_delivery_time\x18\a \x01(\tR\x15estimatedDeliveryTime\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\b \x01(\tR\tcreatedAt\x12\x1d\n" +
@@ -567,18 +599,29 @@ const file_order_proto_rawDesc = "" +
 	"\tseller_id\x18\x02 \x01(\tR\bsellerId\x12\x19\n" +
 	"\bbuyer_id\x18\x03 \x01(\tR\abuyerId\x12!\n" +
 	"\fpickup_point\x18\x04 \x01(\tR\vpickupPoint\x126\n" +
-	"\x17estimated_delivery_time\x18\x05 \x01(\tR\x15estimatedDeliveryTime\"!\n" +
+	"\x17estimated_delivery_time\x18\x05 \x01(\tR\x15estimatedDeliveryTime\"]\n" +
 	"\x0fGetOrderRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"h\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12/\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x12.order.OrderStatusH\x00R\x06status\x88\x01\x01B\t\n" +
+	"\a_status\"h\n" +
 	"\x18UpdateOrderStatusRequest\x12\x19\n" +
 	"\border_id\x18\x01 \x01(\tR\aorderId\x121\n" +
 	"\n" +
 	"new_status\x18\x02 \x01(\x0e2\x12.order.OrderStatusR\tnewStatus\"3\n" +
 	"\rOrderResponse\x12\"\n" +
-	"\x05order\x18\x01 \x01(\v2\f.order.OrderR\x05order\"^\n" +
-	"\x10OrderListRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12/\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x12.order.OrderStatusH\x00R\x06status\x88\x01\x01B\t\n" +
+	"\x05order\x18\x01 \x01(\v2\f.order.OrderR\x05order\"\x95\x02\n" +
+	"\x10OrderListRequest\x12!\n" +
+	"\tidProduct\x18\x01 \x01(\tH\x00R\tidProduct\x88\x01\x01\x12\x1f\n" +
+	"\bidSeller\x18\x02 \x01(\tH\x01R\bidSeller\x88\x01\x01\x12\x1d\n" +
+	"\aidBuyer\x18\x03 \x01(\tH\x02R\aidBuyer\x88\x01\x01\x12)\n" +
+	"\ridPickupPoint\x18\x04 \x01(\tH\x03R\ridPickupPoint\x88\x01\x01\x12/\n" +
+	"\x06status\x18\x05 \x01(\x0e2\x12.order.OrderStatusH\x04R\x06status\x88\x01\x01B\f\n" +
+	"\n" +
+	"_idProductB\v\n" +
+	"\t_idSellerB\n" +
+	"\n" +
+	"\b_idBuyerB\x10\n" +
+	"\x0e_idPickupPointB\t\n" +
 	"\a_status\"9\n" +
 	"\x11OrderListResponse\x12$\n" +
 	"\x06orders\x18\x01 \x03(\v2\f.order.OrderR\x06orders\"/\n" +
@@ -590,14 +633,12 @@ const file_order_proto_rawDesc = "" +
 	"\x17ORDER_STATUS_DELIVERING\x10\x02\x12!\n" +
 	"\x1dORDER_STATUS_READY_FOR_PICKUP\x10\x03\x12\x1a\n" +
 	"\x16ORDER_STATUS_DELIVERED\x10\x04\x12\x19\n" +
-	"\x15ORDER_STATUS_RETURNED\x10\x052\xec\x03\n" +
+	"\x15ORDER_STATUS_RETURNED\x10\x052\xdc\x02\n" +
 	"\fOrderService\x12>\n" +
 	"\vCreateOrder\x12\x19.order.CreateOrderRequest\x1a\x14.order.OrderResponse\x12:\n" +
 	"\n" +
-	"GetOrderId\x12\x16.order.GetOrderRequest\x1a\x14.order.OrderResponse\x12C\n" +
-	"\x0eGetOrderSeller\x12\x17.order.OrderListRequest\x1a\x18.order.OrderListResponse\x12B\n" +
-	"\rGetOrderBuyer\x12\x17.order.OrderListRequest\x1a\x18.order.OrderListResponse\x12H\n" +
-	"\x13GetOrderPickupPoint\x12\x17.order.OrderListRequest\x1a\x18.order.OrderListResponse\x12J\n" +
+	"GetOrderId\x12\x16.order.GetOrderRequest\x1a\x14.order.OrderResponse\x12A\n" +
+	"\fGetOrderList\x12\x17.order.OrderListRequest\x1a\x18.order.OrderListResponse\x12J\n" +
 	"\x11UpdateOrderStatus\x12\x1f.order.UpdateOrderStatusRequest\x1a\x14.order.OrderResponse\x12A\n" +
 	"\vDeleteOrder\x12\x16.order.GetOrderRequest\x1a\x1a.order.OrderDeleteResponseB\x15Z\x13pkg/generated/orderb\x06proto3"
 
@@ -627,29 +668,26 @@ var file_order_proto_goTypes = []any{
 	(*OrderDeleteResponse)(nil),      // 8: order.OrderDeleteResponse
 }
 var file_order_proto_depIdxs = []int32{
-	0,  // 0: order.UpdateOrderStatusRequest.new_status:type_name -> order.OrderStatus
-	1,  // 1: order.OrderResponse.order:type_name -> order.Order
-	0,  // 2: order.OrderListRequest.status:type_name -> order.OrderStatus
-	1,  // 3: order.OrderListResponse.orders:type_name -> order.Order
-	2,  // 4: order.OrderService.CreateOrder:input_type -> order.CreateOrderRequest
-	3,  // 5: order.OrderService.GetOrderId:input_type -> order.GetOrderRequest
-	6,  // 6: order.OrderService.GetOrderSeller:input_type -> order.OrderListRequest
-	6,  // 7: order.OrderService.GetOrderBuyer:input_type -> order.OrderListRequest
-	6,  // 8: order.OrderService.GetOrderPickupPoint:input_type -> order.OrderListRequest
-	4,  // 9: order.OrderService.UpdateOrderStatus:input_type -> order.UpdateOrderStatusRequest
-	3,  // 10: order.OrderService.DeleteOrder:input_type -> order.GetOrderRequest
-	5,  // 11: order.OrderService.CreateOrder:output_type -> order.OrderResponse
-	5,  // 12: order.OrderService.GetOrderId:output_type -> order.OrderResponse
-	7,  // 13: order.OrderService.GetOrderSeller:output_type -> order.OrderListResponse
-	7,  // 14: order.OrderService.GetOrderBuyer:output_type -> order.OrderListResponse
-	7,  // 15: order.OrderService.GetOrderPickupPoint:output_type -> order.OrderListResponse
-	5,  // 16: order.OrderService.UpdateOrderStatus:output_type -> order.OrderResponse
-	8,  // 17: order.OrderService.DeleteOrder:output_type -> order.OrderDeleteResponse
-	11, // [11:18] is the sub-list for method output_type
-	4,  // [4:11] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	0,  // 0: order.GetOrderRequest.status:type_name -> order.OrderStatus
+	0,  // 1: order.UpdateOrderStatusRequest.new_status:type_name -> order.OrderStatus
+	1,  // 2: order.OrderResponse.order:type_name -> order.Order
+	0,  // 3: order.OrderListRequest.status:type_name -> order.OrderStatus
+	1,  // 4: order.OrderListResponse.orders:type_name -> order.Order
+	2,  // 5: order.OrderService.CreateOrder:input_type -> order.CreateOrderRequest
+	3,  // 6: order.OrderService.GetOrderId:input_type -> order.GetOrderRequest
+	6,  // 7: order.OrderService.GetOrderList:input_type -> order.OrderListRequest
+	4,  // 8: order.OrderService.UpdateOrderStatus:input_type -> order.UpdateOrderStatusRequest
+	3,  // 9: order.OrderService.DeleteOrder:input_type -> order.GetOrderRequest
+	5,  // 10: order.OrderService.CreateOrder:output_type -> order.OrderResponse
+	5,  // 11: order.OrderService.GetOrderId:output_type -> order.OrderResponse
+	7,  // 12: order.OrderService.GetOrderList:output_type -> order.OrderListResponse
+	5,  // 13: order.OrderService.UpdateOrderStatus:output_type -> order.OrderResponse
+	8,  // 14: order.OrderService.DeleteOrder:output_type -> order.OrderDeleteResponse
+	10, // [10:15] is the sub-list for method output_type
+	5,  // [5:10] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_order_proto_init() }
@@ -657,6 +695,7 @@ func file_order_proto_init() {
 	if File_order_proto != nil {
 		return
 	}
+	file_order_proto_msgTypes[2].OneofWrappers = []any{}
 	file_order_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

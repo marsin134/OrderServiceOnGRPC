@@ -13,3 +13,11 @@ type Order struct {
 	CreateTime    time.Time `json:"createTime" db:"created_at"`
 	UpdateTime    time.Time `json:"updateTime" db:"updated_at"`
 }
+
+type ListOrdersRequest struct {
+	IdProduct *string
+	IdSeller  *string
+	IdBuyer   *string
+	IdPickup  *string
+	Status    *string
+}

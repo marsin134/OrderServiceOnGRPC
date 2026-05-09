@@ -19,13 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	OrderService_CreateOrder_FullMethodName         = "/order.OrderService/CreateOrder"
-	OrderService_GetOrderId_FullMethodName          = "/order.OrderService/GetOrderId"
-	OrderService_GetOrderSeller_FullMethodName      = "/order.OrderService/GetOrderSeller"
-	OrderService_GetOrderBuyer_FullMethodName       = "/order.OrderService/GetOrderBuyer"
-	OrderService_GetOrderPickupPoint_FullMethodName = "/order.OrderService/GetOrderPickupPoint"
-	OrderService_UpdateOrderStatus_FullMethodName   = "/order.OrderService/UpdateOrderStatus"
-	OrderService_DeleteOrder_FullMethodName         = "/order.OrderService/DeleteOrder"
+	OrderService_CreateOrder_FullMethodName       = "/order.OrderService/CreateOrder"
+	OrderService_GetOrderId_FullMethodName        = "/order.OrderService/GetOrderId"
+	OrderService_GetOrderList_FullMethodName      = "/order.OrderService/GetOrderList"
+	OrderService_UpdateOrderStatus_FullMethodName = "/order.OrderService/UpdateOrderStatus"
+	OrderService_DeleteOrder_FullMethodName       = "/order.OrderService/DeleteOrder"
 )
 
 // OrderServiceClient is the client API for OrderService service.
@@ -34,9 +32,7 @@ const (
 type OrderServiceClient interface {
 	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	GetOrderId(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
-	GetOrderSeller(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListResponse, error)
-	GetOrderBuyer(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListResponse, error)
-	GetOrderPickupPoint(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListResponse, error)
+	GetOrderList(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListResponse, error)
 	UpdateOrderStatus(ctx context.Context, in *UpdateOrderStatusRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	DeleteOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*OrderDeleteResponse, error)
 }
@@ -69,30 +65,10 @@ func (c *orderServiceClient) GetOrderId(ctx context.Context, in *GetOrderRequest
 	return out, nil
 }
 
-func (c *orderServiceClient) GetOrderSeller(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListResponse, error) {
+func (c *orderServiceClient) GetOrderList(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(OrderListResponse)
-	err := c.cc.Invoke(ctx, OrderService_GetOrderSeller_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *orderServiceClient) GetOrderBuyer(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OrderListResponse)
-	err := c.cc.Invoke(ctx, OrderService_GetOrderBuyer_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *orderServiceClient) GetOrderPickupPoint(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OrderListResponse)
-	err := c.cc.Invoke(ctx, OrderService_GetOrderPickupPoint_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, OrderService_GetOrderList_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -125,9 +101,7 @@ func (c *orderServiceClient) DeleteOrder(ctx context.Context, in *GetOrderReques
 type OrderServiceServer interface {
 	CreateOrder(context.Context, *CreateOrderRequest) (*OrderResponse, error)
 	GetOrderId(context.Context, *GetOrderRequest) (*OrderResponse, error)
-	GetOrderSeller(context.Context, *OrderListRequest) (*OrderListResponse, error)
-	GetOrderBuyer(context.Context, *OrderListRequest) (*OrderListResponse, error)
-	GetOrderPickupPoint(context.Context, *OrderListRequest) (*OrderListResponse, error)
+	GetOrderList(context.Context, *OrderListRequest) (*OrderListResponse, error)
 	UpdateOrderStatus(context.Context, *UpdateOrderStatusRequest) (*OrderResponse, error)
 	DeleteOrder(context.Context, *GetOrderRequest) (*OrderDeleteResponse, error)
 	mustEmbedUnimplementedOrderServiceServer()
@@ -146,14 +120,8 @@ func (UnimplementedOrderServiceServer) CreateOrder(context.Context, *CreateOrder
 func (UnimplementedOrderServiceServer) GetOrderId(context.Context, *GetOrderRequest) (*OrderResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetOrderId not implemented")
 }
-func (UnimplementedOrderServiceServer) GetOrderSeller(context.Context, *OrderListRequest) (*OrderListResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetOrderSeller not implemented")
-}
-func (UnimplementedOrderServiceServer) GetOrderBuyer(context.Context, *OrderListRequest) (*OrderListResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetOrderBuyer not implemented")
-}
-func (UnimplementedOrderServiceServer) GetOrderPickupPoint(context.Context, *OrderListRequest) (*OrderListResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetOrderPickupPoint not implemented")
+func (UnimplementedOrderServiceServer) GetOrderList(context.Context, *OrderListRequest) (*OrderListResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOrderList not implemented")
 }
 func (UnimplementedOrderServiceServer) UpdateOrderStatus(context.Context, *UpdateOrderStatusRequest) (*OrderResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateOrderStatus not implemented")
@@ -218,56 +186,20 @@ func _OrderService_GetOrderId_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OrderService_GetOrderSeller_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OrderService_GetOrderList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(OrderListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServiceServer).GetOrderSeller(ctx, in)
+		return srv.(OrderServiceServer).GetOrderList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: OrderService_GetOrderSeller_FullMethodName,
+		FullMethod: OrderService_GetOrderList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceServer).GetOrderSeller(ctx, req.(*OrderListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrderService_GetOrderBuyer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrderListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrderServiceServer).GetOrderBuyer(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrderService_GetOrderBuyer_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceServer).GetOrderBuyer(ctx, req.(*OrderListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OrderService_GetOrderPickupPoint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrderListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OrderServiceServer).GetOrderPickupPoint(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OrderService_GetOrderPickupPoint_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceServer).GetOrderPickupPoint(ctx, req.(*OrderListRequest))
+		return srv.(OrderServiceServer).GetOrderList(ctx, req.(*OrderListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -324,16 +256,8 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OrderService_GetOrderId_Handler,
 		},
 		{
-			MethodName: "GetOrderSeller",
-			Handler:    _OrderService_GetOrderSeller_Handler,
-		},
-		{
-			MethodName: "GetOrderBuyer",
-			Handler:    _OrderService_GetOrderBuyer_Handler,
-		},
-		{
-			MethodName: "GetOrderPickupPoint",
-			Handler:    _OrderService_GetOrderPickupPoint_Handler,
+			MethodName: "GetOrderList",
+			Handler:    _OrderService_GetOrderList_Handler,
 		},
 		{
 			MethodName: "UpdateOrderStatus",
