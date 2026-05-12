@@ -75,6 +75,12 @@ func (r orderRepository) GetOrderList(ctx context.Context, filter models.ListOrd
 		args = append(args, *filter.IdPickup)
 	}
 
+	if filter.DeliveryTime != nil {
+		argCount++
+		baseQuery += fmt.Sprintf(" AND delivery_time = $%d", argCount)
+		args = append(args, *filter.DeliveryTime)
+	}
+
 	if filter.Status != nil {
 		argCount++
 		baseQuery += fmt.Sprintf(" AND status = $%d", argCount)

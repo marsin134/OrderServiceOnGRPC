@@ -15,9 +15,10 @@ type Order struct {
 }
 
 type ListOrdersRequest struct {
-	IdProduct *string
-	IdSeller  *string
-	IdBuyer   *string
-	IdPickup  *string
-	Status    *string
+	IdProduct    *string
+	IdSeller     *string
+	IdBuyer      *string
+	IdPickup     *string
+	DeliveryTime *string
+	Status       *string
 }
