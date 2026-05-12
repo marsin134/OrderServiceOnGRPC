@@ -3,21 +3,8 @@ package repository
 import (
 	"context"
 	"fmt"
-	"github.com/google/uuid"
 	"orderServiceGRPC/internal/database"
 	"orderServiceGRPC/internal/models"
-	"time"
-)
-
-var (
-	OrderStatusName = map[int]string{
-		0: "ORDER_STATUS_UNSPECIFIED",
-		1: "ORDER_STATUS_COLLECTING",
-		2: "ORDER_STATUS_DELIVERING",
-		3: "ORDER_STATUS_READY_FOR_PICKUP",
-		4: "ORDER_STATUS_DELIVERED",
-		5: "ORDER_STATUS_RETURNED",
-	}
 )
 
 type orderRepository struct {
@@ -29,11 +16,6 @@ func NewOrderRepository(db *database.DB) *orderRepository {
 }
 
 func (r orderRepository) CreateOrder(ctx context.Context, order models.Order) (*models.Order, error) {
-	order.OrderId = uuid.New().String()
-	order.Status = OrderStatusName[0]
-	order.CreateTime = time.Now()
-	order.UpdateTime = time.Now()
-
 	query := `
 		INSERT INTO orders (order_id, product_id, seller_id, buyer_id, status, pickup_point_id, delivery_time, created_at, updated_at)
 		VALUES (:order_id, :product_id, :seller_id, :buyer_id, :status, :pickup_point_id, :delivery_time, :created_at, :updated_at)
@@ -109,22 +91,16 @@ func (r orderRepository) GetOrderList(ctx context.Context, filter models.ListOrd
 	return orders, nil
 }
 
-func (r orderRepository) UpdateOrder(ctx context.Context, id string, newStatusIndex int) (*models.Order, error) {
-	order, err := r.GetOrderId(ctx, id)
-	if err != nil {
-		return nil, fmt.Errorf("error when getting the order id from the database: %w", err)
-	}
-	order.Status = OrderStatusName[newStatusIndex]
-
+func (r orderRepository) UpdateOrder(ctx context.Context, order models.Order) (*models.Order, error) {
 	query := `UPDATE orders SET status = :status 
               WHERE order_id = :order_id`
 
-	_, err = r.db.NamedExecContext(ctx, query, order)
+	_, err := r.db.NamedExecContext(ctx, query, order)
 	if err != nil {
 		return nil, fmt.Errorf("error when updating the order status from the database: %w", err)
 	}
 
-	return order, nil
+	return &order, nil
 }
 
 func (r orderRepository) DeleteOrder(ctx context.Context, id string) error {
