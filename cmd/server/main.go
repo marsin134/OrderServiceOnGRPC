@@ -38,6 +38,24 @@ func main() {
 
 	//repo := repository.NewRepository(repository.NewOrderRepository(db))
 	//ctx := context.Background()
+	//service := service.NewServiceGRPC(repo.Order)
+
+	//order := models.Order{
+	//	ProductId:     "3",
+	//	SellerId:      "3",
+	//	BuyerId:       "3",
+	//	PickupPointId: "3",
+	//	DeliveryTime:  "3",
+	//}
+
+	//err = service.OrderService.DeleteOrder(ctx, "de0ae4a1-f386-4793-9225-3eecc3c3ea28")
+	//if err != nil {
+	//	config.Log.WithFields(logrus.Fields{
+	//		"func": "main",
+	//		"err":  err,
+	//	})
+	//}
+
 	//
 	//err = repo.Order.DeleteOrder(ctx, "2a28de9f-a55c-46bb-9c10-082c27e9038f")
 	//if err != nil {

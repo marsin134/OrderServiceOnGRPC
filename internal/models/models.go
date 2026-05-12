@@ -21,3 +21,8 @@ type ListOrdersRequest struct {
 	IdPickup  *string
 	Status    *string
 }
+
+type UpdateOrderData struct {
+	OrderId          string
+	OrderStatusIndex int //optional
+}
