@@ -7,6 +7,8 @@ require (
 	github.com/jmoiron/sqlx v1.4.0 // indirect
 	github.com/lib/pq v1.12.3 // indirect
 	github.com/sirupsen/logrus v1.9.4 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
+	go.uber.org/zap v1.28.0 // indirect
 	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.34.0 // indirect

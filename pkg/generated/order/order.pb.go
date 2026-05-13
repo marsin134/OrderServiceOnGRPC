@@ -318,7 +318,7 @@ func (x *GetOrderRequest) GetStatus() OrderStatus {
 type UpdateOrderStatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	OrderId       string                 `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
-	NewStatus     OrderStatus            `protobuf:"varint,2,opt,name=new_status,json=newStatus,proto3,enum=order.OrderStatus" json:"new_status,omitempty"`
+	NewStatus     *OrderStatus           `protobuf:"varint,2,opt,name=new_status,json=newStatus,proto3,enum=order.OrderStatus,oneof" json:"new_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -361,8 +361,8 @@ func (x *UpdateOrderStatusRequest) GetOrderId() string {
 }
 
 func (x *UpdateOrderStatusRequest) GetNewStatus() OrderStatus {
-	if x != nil {
-		return x.NewStatus
+	if x != nil && x.NewStatus != nil {
+		return *x.NewStatus
 	}
 	return OrderStatus_ORDER_STATUS_UNSPECIFIED
 }
@@ -417,7 +417,8 @@ type OrderListRequest struct {
 	IdSeller      *string                `protobuf:"bytes,2,opt,name=idSeller,proto3,oneof" json:"idSeller,omitempty"`
 	IdBuyer       *string                `protobuf:"bytes,3,opt,name=idBuyer,proto3,oneof" json:"idBuyer,omitempty"`
 	IdPickupPoint *string                `protobuf:"bytes,4,opt,name=idPickupPoint,proto3,oneof" json:"idPickupPoint,omitempty"`
-	Status        *OrderStatus           `protobuf:"varint,5,opt,name=status,proto3,enum=order.OrderStatus,oneof" json:"status,omitempty"`
+	DeliveryTime  *string                `protobuf:"bytes,5,opt,name=deliveryTime,proto3,oneof" json:"deliveryTime,omitempty"`
+	Status        *OrderStatus           `protobuf:"varint,6,opt,name=status,proto3,enum=order.OrderStatus,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -476,6 +477,13 @@ func (x *OrderListRequest) GetIdBuyer() string {
 func (x *OrderListRequest) GetIdPickupPoint() string {
 	if x != nil && x.IdPickupPoint != nil {
 		return *x.IdPickupPoint
+	}
+	return ""
+}
+
+func (x *OrderListRequest) GetDeliveryTime() string {
+	if x != nil && x.DeliveryTime != nil {
+		return *x.DeliveryTime
 	}
 	return ""
 }
@@ -603,25 +611,28 @@ const file_order_proto_rawDesc = "" +
 	"\x0fGetOrderRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12/\n" +
 	"\x06status\x18\x02 \x01(\x0e2\x12.order.OrderStatusH\x00R\x06status\x88\x01\x01B\t\n" +
-	"\a_status\"h\n" +
+	"\a_status\"|\n" +
 	"\x18UpdateOrderStatusRequest\x12\x19\n" +
-	"\border_id\x18\x01 \x01(\tR\aorderId\x121\n" +
+	"\border_id\x18\x01 \x01(\tR\aorderId\x126\n" +
 	"\n" +
-	"new_status\x18\x02 \x01(\x0e2\x12.order.OrderStatusR\tnewStatus\"3\n" +
+	"new_status\x18\x02 \x01(\x0e2\x12.order.OrderStatusH\x00R\tnewStatus\x88\x01\x01B\r\n" +
+	"\v_new_status\"3\n" +
 	"\rOrderResponse\x12\"\n" +
-	"\x05order\x18\x01 \x01(\v2\f.order.OrderR\x05order\"\x95\x02\n" +
+	"\x05order\x18\x01 \x01(\v2\f.order.OrderR\x05order\"\xcf\x02\n" +
 	"\x10OrderListRequest\x12!\n" +
 	"\tidProduct\x18\x01 \x01(\tH\x00R\tidProduct\x88\x01\x01\x12\x1f\n" +
 	"\bidSeller\x18\x02 \x01(\tH\x01R\bidSeller\x88\x01\x01\x12\x1d\n" +
 	"\aidBuyer\x18\x03 \x01(\tH\x02R\aidBuyer\x88\x01\x01\x12)\n" +
-	"\ridPickupPoint\x18\x04 \x01(\tH\x03R\ridPickupPoint\x88\x01\x01\x12/\n" +
-	"\x06status\x18\x05 \x01(\x0e2\x12.order.OrderStatusH\x04R\x06status\x88\x01\x01B\f\n" +
+	"\ridPickupPoint\x18\x04 \x01(\tH\x03R\ridPickupPoint\x88\x01\x01\x12'\n" +
+	"\fdeliveryTime\x18\x05 \x01(\tH\x04R\fdeliveryTime\x88\x01\x01\x12/\n" +
+	"\x06status\x18\x06 \x01(\x0e2\x12.order.OrderStatusH\x05R\x06status\x88\x01\x01B\f\n" +
 	"\n" +
 	"_idProductB\v\n" +
 	"\t_idSellerB\n" +
 	"\n" +
 	"\b_idBuyerB\x10\n" +
-	"\x0e_idPickupPointB\t\n" +
+	"\x0e_idPickupPointB\x0f\n" +
+	"\r_deliveryTimeB\t\n" +
 	"\a_status\"9\n" +
 	"\x11OrderListResponse\x12$\n" +
 	"\x06orders\x18\x01 \x03(\v2\f.order.OrderR\x06orders\"/\n" +
@@ -696,6 +707,7 @@ func file_order_proto_init() {
 		return
 	}
 	file_order_proto_msgTypes[2].OneofWrappers = []any{}
+	file_order_proto_msgTypes[3].OneofWrappers = []any{}
 	file_order_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

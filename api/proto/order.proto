@@ -48,7 +48,7 @@ message GetOrderRequest {
 
 message UpdateOrderStatusRequest {
   string order_id = 1;
-  OrderStatus new_status = 2;
+  optional OrderStatus new_status = 2;
 }
 
 message OrderResponse {
@@ -60,7 +60,8 @@ message OrderListRequest {
   optional string idSeller = 2;
   optional string idBuyer = 3;
   optional string idPickupPoint = 4;
-  optional OrderStatus status = 5;
+  optional string deliveryTime = 5;
+  optional OrderStatus status = 6;
 }
 
 message OrderListResponse {

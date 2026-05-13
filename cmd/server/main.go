@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 	"orderServiceGRPC/internal/config"
 	"orderServiceGRPC/internal/database"
 )
@@ -24,9 +25,10 @@ func main() {
 	defer db.Close()
 
 	if err != nil {
-		config.Log.WithFields(logrus.Fields{
-			"func":  "main",
-			"error": err}).Error("Failed to connect to database")
+		config.Log.Error("Failed to connect to database",
+			zap.String("func", "main"),
+			zap.String("error", err.Error()))
+
 	}
 
 	//err = db.RunMigrations("migrations\\001_init.sql")
@@ -39,16 +41,15 @@ func main() {
 	//repo := repository.NewRepository(repository.NewOrderRepository(db))
 	//ctx := context.Background()
 	//service := service.NewServiceGRPC(repo.Order)
-
-	//order := models.Order{
-	//	ProductId:     "3",
-	//	SellerId:      "3",
-	//	BuyerId:       "3",
-	//	PickupPointId: "3",
-	//	DeliveryTime:  "3",
+	//
+	//err = service.OrderService.DeleteOrder(ctx, "4decd010-e014-4801-81e2-05550fdee708")
+	//if err != nil {
+	//	config.Log.WithFields(logrus.Fields{
+	//		"func": "main",
+	//		"err":  err,
+	//	})
 	//}
-
-	//err = service.OrderService.DeleteOrder(ctx, "de0ae4a1-f386-4793-9225-3eecc3c3ea28")
+	//err = service.OrderService.DeleteOrder(ctx, "bab94024-b55f-437f-a1b4-7d50596f654b")
 	//if err != nil {
 	//	config.Log.WithFields(logrus.Fields{
 	//		"func": "main",

@@ -2,16 +2,16 @@ package service
 
 import (
 	"context"
-	"orderServiceGRPC/internal/models"
 	"orderServiceGRPC/internal/repository"
+	pb "orderServiceGRPC/pkg/generated/order"
 )
 
 type orderServiceInterface interface {
-	CreateOrder(ctx context.Context, order models.Order) (*models.Order, error)
-	CetOrderId(ctx context.Context, id string) (*models.Order, error)
-	GetOrderList(ctx context.Context, filter models.ListOrdersRequest) ([]*models.Order, error)
-	UpdateOrder(ctx context.Context, data models.UpdateOrderData) (*models.Order, error)
-	DeleteOrder(ctx context.Context, id string) error
+	CreateOrder(ctx context.Context, request *pb.CreateOrderRequest) (*pb.OrderResponse, error)
+	CetOrderId(ctx context.Context, id string) (*pb.OrderResponse, error)
+	GetOrderList(ctx context.Context, req *pb.OrderListRequest) (*pb.OrderListResponse, error)
+	UpdateOrder(ctx context.Context, data *pb.UpdateOrderStatusRequest) (*pb.OrderResponse, error)
+	DeleteOrder(ctx context.Context, orderId string) error
 }
 
 type Service struct {
