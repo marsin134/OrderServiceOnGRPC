@@ -266,7 +266,6 @@ func (x *CreateOrderRequest) GetEstimatedDeliveryTime() string {
 type GetOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Status        *OrderStatus           `protobuf:"varint,2,opt,name=status,proto3,enum=order.OrderStatus,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -306,13 +305,6 @@ func (x *GetOrderRequest) GetId() string {
 		return x.Id
 	}
 	return ""
-}
-
-func (x *GetOrderRequest) GetStatus() OrderStatus {
-	if x != nil && x.Status != nil {
-		return *x.Status
-	}
-	return OrderStatus_ORDER_STATUS_UNSPECIFIED
 }
 
 type UpdateOrderStatusRequest struct {
@@ -607,11 +599,9 @@ const file_order_proto_rawDesc = "" +
 	"\tseller_id\x18\x02 \x01(\tR\bsellerId\x12\x19\n" +
 	"\bbuyer_id\x18\x03 \x01(\tR\abuyerId\x12!\n" +
 	"\fpickup_point\x18\x04 \x01(\tR\vpickupPoint\x126\n" +
-	"\x17estimated_delivery_time\x18\x05 \x01(\tR\x15estimatedDeliveryTime\"]\n" +
+	"\x17estimated_delivery_time\x18\x05 \x01(\tR\x15estimatedDeliveryTime\"!\n" +
 	"\x0fGetOrderRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12/\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x12.order.OrderStatusH\x00R\x06status\x88\x01\x01B\t\n" +
-	"\a_status\"|\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"|\n" +
 	"\x18UpdateOrderStatusRequest\x12\x19\n" +
 	"\border_id\x18\x01 \x01(\tR\aorderId\x126\n" +
 	"\n" +
@@ -679,26 +669,25 @@ var file_order_proto_goTypes = []any{
 	(*OrderDeleteResponse)(nil),      // 8: order.OrderDeleteResponse
 }
 var file_order_proto_depIdxs = []int32{
-	0,  // 0: order.GetOrderRequest.status:type_name -> order.OrderStatus
-	0,  // 1: order.UpdateOrderStatusRequest.new_status:type_name -> order.OrderStatus
-	1,  // 2: order.OrderResponse.order:type_name -> order.Order
-	0,  // 3: order.OrderListRequest.status:type_name -> order.OrderStatus
-	1,  // 4: order.OrderListResponse.orders:type_name -> order.Order
-	2,  // 5: order.OrderService.CreateOrder:input_type -> order.CreateOrderRequest
-	3,  // 6: order.OrderService.GetOrderId:input_type -> order.GetOrderRequest
-	6,  // 7: order.OrderService.GetOrderList:input_type -> order.OrderListRequest
-	4,  // 8: order.OrderService.UpdateOrderStatus:input_type -> order.UpdateOrderStatusRequest
-	3,  // 9: order.OrderService.DeleteOrder:input_type -> order.GetOrderRequest
-	5,  // 10: order.OrderService.CreateOrder:output_type -> order.OrderResponse
-	5,  // 11: order.OrderService.GetOrderId:output_type -> order.OrderResponse
-	7,  // 12: order.OrderService.GetOrderList:output_type -> order.OrderListResponse
-	5,  // 13: order.OrderService.UpdateOrderStatus:output_type -> order.OrderResponse
-	8,  // 14: order.OrderService.DeleteOrder:output_type -> order.OrderDeleteResponse
-	10, // [10:15] is the sub-list for method output_type
-	5,  // [5:10] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	0, // 0: order.UpdateOrderStatusRequest.new_status:type_name -> order.OrderStatus
+	1, // 1: order.OrderResponse.order:type_name -> order.Order
+	0, // 2: order.OrderListRequest.status:type_name -> order.OrderStatus
+	1, // 3: order.OrderListResponse.orders:type_name -> order.Order
+	2, // 4: order.OrderService.CreateOrder:input_type -> order.CreateOrderRequest
+	3, // 5: order.OrderService.GetOrderId:input_type -> order.GetOrderRequest
+	6, // 6: order.OrderService.GetOrderList:input_type -> order.OrderListRequest
+	4, // 7: order.OrderService.UpdateOrderStatus:input_type -> order.UpdateOrderStatusRequest
+	3, // 8: order.OrderService.DeleteOrder:input_type -> order.GetOrderRequest
+	5, // 9: order.OrderService.CreateOrder:output_type -> order.OrderResponse
+	5, // 10: order.OrderService.GetOrderId:output_type -> order.OrderResponse
+	7, // 11: order.OrderService.GetOrderList:output_type -> order.OrderListResponse
+	5, // 12: order.OrderService.UpdateOrderStatus:output_type -> order.OrderResponse
+	8, // 13: order.OrderService.DeleteOrder:output_type -> order.OrderDeleteResponse
+	9, // [9:14] is the sub-list for method output_type
+	4, // [4:9] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_order_proto_init() }
@@ -706,7 +695,6 @@ func file_order_proto_init() {
 	if File_order_proto != nil {
 		return
 	}
-	file_order_proto_msgTypes[2].OneofWrappers = []any{}
 	file_order_proto_msgTypes[3].OneofWrappers = []any{}
 	file_order_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}

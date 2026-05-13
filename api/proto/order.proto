@@ -43,7 +43,6 @@ message CreateOrderRequest {
 
 message GetOrderRequest {
   string id = 1;
-  optional OrderStatus status = 2;
 }
 
 message UpdateOrderStatusRequest {

@@ -11,7 +11,7 @@ type orderServiceInterface interface {
 	CetOrderId(ctx context.Context, id string) (*pb.OrderResponse, error)
 	GetOrderList(ctx context.Context, req *pb.OrderListRequest) (*pb.OrderListResponse, error)
 	UpdateOrder(ctx context.Context, data *pb.UpdateOrderStatusRequest) (*pb.OrderResponse, error)
-	DeleteOrder(ctx context.Context, orderId string) error
+	DeleteOrder(ctx context.Context, req *pb.GetOrderRequest) (*pb.OrderDeleteResponse, error)
 }
 
 type Service struct {

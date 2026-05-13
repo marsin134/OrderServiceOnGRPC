@@ -1,10 +1,20 @@
 package main
 
 import (
+	"context"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/reflection"
+	"google.golang.org/grpc/status"
+	"net"
+	"orderServiceGRPC/cmd/app"
 	"orderServiceGRPC/internal/config"
-	"orderServiceGRPC/internal/database"
+	pb "orderServiceGRPC/pkg/generated/order"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -21,49 +31,56 @@ func main() {
 			"error": err}).Error("Failed to read .env")
 	}
 
-	db, err := database.ConnectedDB(cfg)
-	defer db.Close()
+	handler := app.App(cfg)
 
+	grpcServer := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(
+			recoveryInterceptor(),
+		),
+	)
+
+	pb.RegisterOrderServiceServer(grpcServer, handler)
+
+	reflection.Register(grpcServer)
+
+	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
-		config.Log.Error("Failed to connect to database",
-			zap.String("func", "main"),
-			zap.String("error", err.Error()))
-
+		config.Log.Fatal("Failed to listen", zap.Error(err))
 	}
 
-	//err = db.RunMigrations("migrations\\001_init.sql")
-	//if err != nil {
-	//	config.Log.WithFields(logrus.Fields{
-	//		"func":  "main",
-	//		"error": err}).Error("Failed to run migrations")
-	//}
+	go func() {
+		sigChan := make(chan os.Signal, 1)
+		signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+		<-sigChan
 
-	//repo := repository.NewRepository(repository.NewOrderRepository(db))
-	//ctx := context.Background()
-	//service := service.NewServiceGRPC(repo.Order)
-	//
-	//err = service.OrderService.DeleteOrder(ctx, "4decd010-e014-4801-81e2-05550fdee708")
-	//if err != nil {
-	//	config.Log.WithFields(logrus.Fields{
-	//		"func": "main",
-	//		"err":  err,
-	//	})
-	//}
-	//err = service.OrderService.DeleteOrder(ctx, "bab94024-b55f-437f-a1b4-7d50596f654b")
-	//if err != nil {
-	//	config.Log.WithFields(logrus.Fields{
-	//		"func": "main",
-	//		"err":  err,
-	//	})
-	//}
+		config.Log.Info("Shutting down server...")
+		grpcServer.GracefulStop()
+		config.Log.Info("Server stopped")
+	}()
 
-	//
-	//err = repo.Order.DeleteOrder(ctx, "2a28de9f-a55c-46bb-9c10-082c27e9038f")
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
-	//err = repo.Order.DeleteOrder(ctx, "cfd4c16f-0d1d-4f79-9e13-696b989df97c")
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
+	config.Log.Info("gRPC server listening on :50051")
+	if err = grpcServer.Serve(lis); err != nil {
+		config.Log.Fatal("Failed to serve", zap.Error(err))
+	}
+}
+
+func recoveryInterceptor() grpc.UnaryServerInterceptor {
+	return func(
+		ctx context.Context,
+		req interface{},
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler,
+	) (resp interface{}, err error) {
+		defer func() {
+			if r := recover(); r != nil {
+				config.Log.Error("Recovered from panic",
+					zap.String("method", info.FullMethod),
+					zap.Any("panic", r),
+				)
+				err = status.Error(codes.Internal, "internal server error")
+			}
+		}()
+
+		return handler(ctx, req)
+	}
 }

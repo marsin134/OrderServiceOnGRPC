@@ -126,8 +126,12 @@ func (svc *orderService) UpdateOrder(ctx context.Context, data *pb.UpdateOrderSt
 	return &pb.OrderResponse{Order: modelToProto(newOrder)}, nil
 }
 
-func (svc *orderService) DeleteOrder(ctx context.Context, orderId string) error {
-	return svc.order.DeleteOrder(ctx, orderId)
+func (svc *orderService) DeleteOrder(ctx context.Context, req *pb.GetOrderRequest) (*pb.OrderDeleteResponse, error) {
+	err := svc.order.DeleteOrder(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.OrderDeleteResponse{Message: "ok"}, nil
 }
 
 func modelToProto(order *models.Order) *pb.Order {
