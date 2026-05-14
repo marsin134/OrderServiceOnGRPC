@@ -9,14 +9,13 @@ import (
 	"orderServiceGRPC/internal/service"
 )
 
-func App(cfg *config.Config) *handler.Handler {
+func App(cfg *config.Config) (*handler.Handler, *database.DB) {
 	config.Log.Info("Connected to database",
 		zap.String("host", cfg.DB.Host),
 		zap.String("database", cfg.DB.DBName),
 	)
 
 	db, err := database.ConnectedDB(cfg)
-	defer db.Close()
 
 	if err != nil {
 		config.Log.Error("Failed to connect to database",
@@ -27,5 +26,5 @@ func App(cfg *config.Config) *handler.Handler {
 	service := service.NewServiceGRPC(repo.Order)
 	handler := handler.NewHandler(service)
 
-	return handler
+	return handler, db
 }

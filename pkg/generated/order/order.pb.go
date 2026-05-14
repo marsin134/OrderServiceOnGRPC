@@ -405,11 +405,11 @@ func (x *OrderResponse) GetOrder() *Order {
 
 type OrderListRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	IdProduct     *string                `protobuf:"bytes,1,opt,name=idProduct,proto3,oneof" json:"idProduct,omitempty"`
-	IdSeller      *string                `protobuf:"bytes,2,opt,name=idSeller,proto3,oneof" json:"idSeller,omitempty"`
-	IdBuyer       *string                `protobuf:"bytes,3,opt,name=idBuyer,proto3,oneof" json:"idBuyer,omitempty"`
-	IdPickupPoint *string                `protobuf:"bytes,4,opt,name=idPickupPoint,proto3,oneof" json:"idPickupPoint,omitempty"`
-	DeliveryTime  *string                `protobuf:"bytes,5,opt,name=deliveryTime,proto3,oneof" json:"deliveryTime,omitempty"`
+	IdProduct     *string                `protobuf:"bytes,1,opt,name=id_product,json=idProduct,proto3,oneof" json:"id_product,omitempty"`
+	IdSeller      *string                `protobuf:"bytes,2,opt,name=id_seller,json=idSeller,proto3,oneof" json:"id_seller,omitempty"`
+	IdBuyer       *string                `protobuf:"bytes,3,opt,name=id_buyer,json=idBuyer,proto3,oneof" json:"id_buyer,omitempty"`
+	IdPickupPoint *string                `protobuf:"bytes,4,opt,name=id_pickup_point,json=idPickupPoint,proto3,oneof" json:"id_pickup_point,omitempty"`
+	DeliveryTime  *string                `protobuf:"bytes,5,opt,name=delivery_time,json=deliveryTime,proto3,oneof" json:"delivery_time,omitempty"`
 	Status        *OrderStatus           `protobuf:"varint,6,opt,name=status,proto3,enum=order.OrderStatus,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -608,21 +608,21 @@ const file_order_proto_rawDesc = "" +
 	"new_status\x18\x02 \x01(\x0e2\x12.order.OrderStatusH\x00R\tnewStatus\x88\x01\x01B\r\n" +
 	"\v_new_status\"3\n" +
 	"\rOrderResponse\x12\"\n" +
-	"\x05order\x18\x01 \x01(\v2\f.order.OrderR\x05order\"\xcf\x02\n" +
-	"\x10OrderListRequest\x12!\n" +
-	"\tidProduct\x18\x01 \x01(\tH\x00R\tidProduct\x88\x01\x01\x12\x1f\n" +
-	"\bidSeller\x18\x02 \x01(\tH\x01R\bidSeller\x88\x01\x01\x12\x1d\n" +
-	"\aidBuyer\x18\x03 \x01(\tH\x02R\aidBuyer\x88\x01\x01\x12)\n" +
-	"\ridPickupPoint\x18\x04 \x01(\tH\x03R\ridPickupPoint\x88\x01\x01\x12'\n" +
-	"\fdeliveryTime\x18\x05 \x01(\tH\x04R\fdeliveryTime\x88\x01\x01\x12/\n" +
-	"\x06status\x18\x06 \x01(\x0e2\x12.order.OrderStatusH\x05R\x06status\x88\x01\x01B\f\n" +
+	"\x05order\x18\x01 \x01(\v2\f.order.OrderR\x05order\"\xdb\x02\n" +
+	"\x10OrderListRequest\x12\"\n" +
 	"\n" +
-	"_idProductB\v\n" +
-	"\t_idSellerB\n" +
+	"id_product\x18\x01 \x01(\tH\x00R\tidProduct\x88\x01\x01\x12 \n" +
+	"\tid_seller\x18\x02 \x01(\tH\x01R\bidSeller\x88\x01\x01\x12\x1e\n" +
+	"\bid_buyer\x18\x03 \x01(\tH\x02R\aidBuyer\x88\x01\x01\x12+\n" +
+	"\x0fid_pickup_point\x18\x04 \x01(\tH\x03R\ridPickupPoint\x88\x01\x01\x12(\n" +
+	"\rdelivery_time\x18\x05 \x01(\tH\x04R\fdeliveryTime\x88\x01\x01\x12/\n" +
+	"\x06status\x18\x06 \x01(\x0e2\x12.order.OrderStatusH\x05R\x06status\x88\x01\x01B\r\n" +
+	"\v_id_productB\f\n" +
 	"\n" +
-	"\b_idBuyerB\x10\n" +
-	"\x0e_idPickupPointB\x0f\n" +
-	"\r_deliveryTimeB\t\n" +
+	"_id_sellerB\v\n" +
+	"\t_id_buyerB\x12\n" +
+	"\x10_id_pickup_pointB\x10\n" +
+	"\x0e_delivery_timeB\t\n" +
 	"\a_status\"9\n" +
 	"\x11OrderListResponse\x12$\n" +
 	"\x06orders\x18\x01 \x03(\v2\f.order.OrderR\x06orders\"/\n" +
