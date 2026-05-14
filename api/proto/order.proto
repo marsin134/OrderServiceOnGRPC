@@ -55,11 +55,11 @@ message OrderResponse {
 }
 
 message OrderListRequest {
-  optional string idProduct = 1;
-  optional string idSeller = 2;
-  optional string idBuyer = 3;
-  optional string idPickupPoint = 4;
-  optional string deliveryTime = 5;
+  optional string id_product = 1;
+  optional string id_seller = 2;
+  optional string id_buyer = 3;
+  optional string id_pickup_point = 4;
+  optional string delivery_time = 5;
   optional OrderStatus status = 6;
 }
 

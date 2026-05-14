@@ -31,7 +31,8 @@ func main() {
 			"error": err}).Error("Failed to read .env")
 	}
 
-	handler := app.App(cfg)
+	handler, db := app.App(cfg)
+	defer db.Close()
 
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(

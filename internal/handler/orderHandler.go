@@ -29,7 +29,7 @@ func (h *Handler) CreateOrder(ctx context.Context, req *pb.CreateOrderRequest) (
 	return order, nil
 }
 
-func (h *Handler) GetOrder(ctx context.Context, req *pb.GetOrderRequest) (*pb.OrderResponse, error) {
+func (h *Handler) GetOrderId(ctx context.Context, req *pb.GetOrderRequest) (*pb.OrderResponse, error) {
 	config.Log.Info("Get order called", zap.String("id", req.Id))
 
 	order, err := h.service.OrderService.CetOrderId(ctx, req.Id)
@@ -43,7 +43,7 @@ func (h *Handler) GetOrder(ctx context.Context, req *pb.GetOrderRequest) (*pb.Or
 }
 
 func (h *Handler) GetOrderList(ctx context.Context, req *pb.OrderListRequest) (*pb.OrderListResponse, error) {
-	config.Log.Info("Get order list called", zap.String("ProductId", *req.IdProduct))
+	config.Log.Info("Get order list called")
 
 	orderList, err := h.service.OrderService.GetOrderList(ctx, req)
 	if err != nil {
@@ -54,7 +54,7 @@ func (h *Handler) GetOrderList(ctx context.Context, req *pb.OrderListRequest) (*
 	return orderList, nil
 }
 
-func (h *Handler) UpdateOrder(ctx context.Context, req *pb.UpdateOrderStatusRequest) (*pb.OrderResponse, error) {
+func (h *Handler) UpdateOrderStatus(ctx context.Context, req *pb.UpdateOrderStatusRequest) (*pb.OrderResponse, error) {
 	config.Log.Info("Get update order called")
 
 	order, err := h.service.OrderService.UpdateOrder(ctx, req)
